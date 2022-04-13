@@ -84,19 +84,10 @@ Without following step you couldn't log in with Estonian (+37200000766) testuser
          -storepass changeit -alias "TEST of ESTEID-SK 2015" -file TEST_of_ESTEID-SK_2015.pem.crt -noprompt
 
 We also need to import a second test root certificate. 
-Without following step you couldn't log in with Lithuanian (+37060000666) testuser:
+Without following step you couldn't log in with Lithuanian (+37060000666) or Estonian newest (+37268000769) testuser:
  * import demo env MID 2016 root certificate:
   
         keytool -importcert -file TEST_of_EID-SK_2016.pem.crt -keystore mid.trusted_root_certs.p12 \
          -storepass changeit -alias "TEST_of_EID-SK_2016" -noprompt
- 
-If you want to use it in production using real phones that hold production certificates
-then you would need to import the following production certificates:
-
-        keytool -importcert -file ESTEID-SK_2011.pem.crt -keystore mid.trusted_root_certs.p12 \
-         -storepass changeit -alias "ESTEID-SK_2011" -noprompt
-
-        keytool -importcert -file ESTEID-SK_2015.pem.crt -keystore mid.trusted_root_certs.p12 \
-         -storepass changeit -alias "ESTEID-SK_2015" -noprompt
 
 If new certificates become available then these need to be imported as well.
