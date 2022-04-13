@@ -67,19 +67,10 @@ and only import certificates needed for that specific environment.
  
 Without following step one would not be able to connect to Demo API server:
  * import demo env API endpoint SSL root certificate. See [instructions how to obtain the certificate](https://github.com/SK-EID/mid-rest-java-client#how-to-obtain-server-certificate).
- * Note that for demo we have imported ROOT certificate (DigiCert SHA2 Secure Server CA) from the chain. Importing root certificate is not recommended for production.
+ * Note that for demo we have imported ROOT certificate (DigiCert TLS RSA SHA256 2020 CA1) from the chain. Importing root certificate is not recommended for production.
 
         keytool -importcert -storetype PKCS12 -keystore mid.trusted_server_certs.p12 \
          -storepass changeit -alias midDemoServerRootCert -file demo_root_cert.crt -noprompt
-
-If you want to be able to point this application (mid-rest-java-demo) against production environment
-(only SK customers have access to production) you should also import production server SSL certificate into same cert store.
-
- * Obtain mid.sk.ee certificate. See [instructions](https://github.com/SK-EID/mid-rest-java-client#how-to-obtain-server-certificate).
- * Import it:
-
-        keytool -importcert -file mid_sk_ee.PEM -keystore mid.trusted_server_certs.p12 \
-        -storepass changeit -alias "mid.sk.ee that expires 2021.03.25"  -noprompt
 
 ### Trust store for known MID certificates
 
