@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Mobile-ID</title>
+    <title>Smart-ID</title>
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
 
@@ -39,7 +39,7 @@
     <div class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container d-flex justify-content-between">
             <a href="/" class="navbar-brand d-flex align-items-center">
-                <strong>Mobile-ID Demo</strong>
+                <strong>Smart-ID Demo</strong>
             </a>
         </div>
     </div>
@@ -50,8 +50,9 @@
 
         <h4 class="alert-heading text-center">Authentication successful</h4>
 
-        <h6 th:text="${'Welcome ' + person.givenName + ' ' + person.surName + '!'}" class="text-center"></h6>
+        <h6 th:text="${'Welcome ' + person.givenName + ' ' + person.surname + '!'}" class="text-center"></h6>
         <h6 th:text="${'ID code:' + person.country + person.identityCode}" class="text-center"></h6>
+        <h6 th:text="${'Date of birth:' + person.dateOfBirth}" class="text-center"></h6>
     </div>
 </div>
 

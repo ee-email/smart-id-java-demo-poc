@@ -2,7 +2,7 @@ package ee.sk.middemo.model;
 
 /*-
  * #%L
- * Mobile ID sample Java client
+ * Smart-ID sample Java client
  * %%
  * Copyright (C) 2018 - 2019 SK ID Solutions AS
  * %%
@@ -29,25 +29,18 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class UserRequest {
 
-    private String phoneNumber;
+    @NotNull
+    @Pattern(regexp="[EE|LV|LT]",
+            message="Invalid country number")
+    private String country;
 
     @NotNull
     @Pattern(regexp="[0-9]{11}",
             message="Invalid national identity number")
     private String nationalIdentityNumber;
 
-    @NotNull
-    @Pattern(regexp="\\+37[0-9]{5,10}",
-            message="Invalid phone number")
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
 
     private MultipartFile file;
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
     public String getNationalIdentityNumber() {
         return nationalIdentityNumber;
@@ -63,5 +56,13 @@ public class UserRequest {
 
     public void setFile(MultipartFile file) {
         this.file = file;
+    }
+
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
     }
 }

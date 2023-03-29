@@ -2,7 +2,7 @@ package ee.sk.middemo;
 
 /*-
  * #%L
- * Mobile ID sample Java client
+ * Smart-ID sample Java client
  * %%
  * Copyright (C) 2018 - 2019 SK ID Solutions AS
  * %%
@@ -22,18 +22,22 @@ package ee.sk.middemo;
  * #L%
  */
 
-import java.io.InputStream;
-import java.security.KeyStore;
-
-import ee.sk.mid.MidAuthenticationResponseValidator;
-import ee.sk.mid.MidClient;
-import ee.sk.middemo.model.UserMidSession;
+import ee.sk.middemo.model.UserSidSession;
+import ee.sk.smartid.AuthenticationResponseValidator;
+import ee.sk.smartid.SmartIdClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.web.context.WebApplicationContext;
+
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.List;
 
 @Configuration
 public class Config {
@@ -60,35 +64,48 @@ public class Config {
     private String midTrustedRootCertsPassword;
 
     @Bean
-    public MidClient mobileIdClient() throws Exception {
+    public SmartIdClient mobileIdClient() throws Exception {
 
         InputStream is = Config.class.getResourceAsStream(midTrustedServerSslCertsFilename);
         KeyStore trustStore = KeyStore.getInstance("PKCS12");
         trustStore.load(is, midTrustedServerSslCertsPassword.toCharArray());
 
-        return MidClient.newBuilder()
-                .withRelyingPartyUUID(midRelyingPartyUuid)
-                .withRelyingPartyName(midRelyingPartyName)
-                .withHostUrl(midApplicationProviderHost)
-                .withLongPollingTimeoutSeconds(60)
-                .withTrustStore(trustStore)
-                .build();
+
+        // Client setup. Note that these values are demo environment specific.
+        SmartIdClient client = new SmartIdClient();
+        client.setRelyingPartyUUID(midRelyingPartyUuid);
+        client.setRelyingPartyName(midRelyingPartyName);
+        client.setHostUrl("https://sid.demo.sk.ee/smart-id-rp/v2/");
+        client.setTrustStore(trustStore);
+
+        return client;
     }
 
     @Bean
     @Scope(value = WebApplicationContext.SCOPE_SESSION,
             proxyMode = ScopedProxyMode.TARGET_CLASS)
-    public UserMidSession userSessionSigning() {
-        return new UserMidSession();
+    public UserSidSession userSessionSigning() {
+        return new UserSidSession();
     }
 
     @Bean
-    public MidAuthenticationResponseValidator midResponseValidator() throws Exception {
-        InputStream is = Config.class.getResourceAsStream(midTrustedRootCertsFilename);
-        KeyStore trustStore = KeyStore.getInstance("PKCS12");
-        trustStore.load(is, midTrustedRootCertsPassword.toCharArray());
+    public AuthenticationResponseValidator midResponseValidator() throws Exception {
 
-        return new MidAuthenticationResponseValidator(trustStore);
+        List<X509Certificate> certificates = new ArrayList<>();
+
+        InputStream is = Config.class.getResourceAsStream(midTrustedRootCertsFilename);
+
+        KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
+        keystore.load(is, midTrustedRootCertsPassword.toCharArray());
+        Enumeration<String> aliases = keystore.aliases();
+
+        while (aliases.hasMoreElements()) {
+            String alias = aliases.nextElement();
+            X509Certificate certificate = (X509Certificate) keystore.getCertificate(alias);
+            certificates.add(certificate);
+        }
+
+        return new AuthenticationResponseValidator(certificates.toArray(new X509Certificate[0]));
     }
 
 }

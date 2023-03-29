@@ -2,7 +2,7 @@ package ee.sk.middemo.model;
 
 /*-
  * #%L
- * Mobile ID sample Java client
+ * Smart-ID sample Java client
  * %%
  * Copyright (C) 2018 - 2019 SK ID Solutions AS
  * %%
@@ -22,6 +22,9 @@ package ee.sk.middemo.model;
  * #L%
  */
 
+import ee.sk.smartid.SignableData;
+import ee.sk.smartid.SignableHash;
+import ee.sk.smartid.rest.dao.SemanticsIdentifier;
 import org.digidoc4j.Container;
 import org.digidoc4j.DataToSign;
 
@@ -31,12 +34,17 @@ public class SigningSessionInfo {
     private String verificationCode;
     private DataToSign dataToSign;
     private Container container;
+    private SignableHash hashToSign;
+
+    private String documentNumber;
 
     private SigningSessionInfo(Builder builder) {
         this.sessionID = builder.sessionID;
         this.verificationCode = builder.verificationCode;
         this.dataToSign = builder.dataToSign;
         this.container = builder.container;
+        this.hashToSign = builder.hashToSign;
+        this.documentNumber = builder.documentNumber;
     }
 
     public String getSessionID() {
@@ -55,6 +63,14 @@ public class SigningSessionInfo {
         return container;
     }
 
+    public String getDocumentNumber() {
+        return documentNumber;
+    }
+
+    public SignableHash getHashToSign() {
+        return hashToSign;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -64,6 +80,9 @@ public class SigningSessionInfo {
         private String verificationCode;
         private DataToSign dataToSign;
         private Container container;
+
+        private SignableHash hashToSign;
+        private String documentNumber;
 
         private Builder() {
         }
@@ -84,6 +103,15 @@ public class SigningSessionInfo {
         }
         public Builder withContainer(Container container) {
             this.container = container;
+            return this;
+        }
+        public Builder withDocumentNumber(String documentNumber) {
+            this.documentNumber = documentNumber;
+            return this;
+        }
+
+        public Builder withHashToSign(SignableHash hashToSign) {
+            this.hashToSign = hashToSign;
             return this;
         }
 

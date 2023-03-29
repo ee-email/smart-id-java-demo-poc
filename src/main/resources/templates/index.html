@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Mobile-ID</title>
+    <title>Smart-ID</title>
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
 
@@ -99,17 +99,17 @@
     <div class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container d-flex justify-content-between">
             <a href="/" class="navbar-brand d-flex align-items-center">
-                <strong>Mobile-ID Demo</strong>
+                <strong>Smart-ID Demo</strong>
             </a>
-            <a href="https://github.com/SK-EID/MID/wiki/Test-number-for-automated-testing-in-DEMO" target="_blank" class="navbar-brand d-flex align-items-center">
-                <strong>Test numbers</strong>
+            <a href="https://github.com/SK-EID/smart-id-documentation/wiki/Environment-technical-parameters" target="_blank" class="navbar-brand d-flex align-items-center">
+                <strong>Test persons</strong>
             </a>
         </div>
     </div>
 </header>
 
 <div class="custom-switch">
-    <h1 class="h1-padding text-center">MOBILE-ID</h1>
+    <h1 class="h1-padding text-center">Smart-ID</h1>
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link active" id="authentication">Authenticate</a>
@@ -123,11 +123,16 @@
 <div class="forms">
     <form method="POST" th:action="@{/authenticationRequest}" th:object="${userRequest}" class="form-action" id="authenticationForm">
         <div class="form-group">
-            <label for="inputPhone">Phone number (+37XXXXXXXX)</label>
-            <input type="text" th:field="*{phoneNumber}" class="form-control" id="inputPhone">
-            <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" style="color:red">
-                inputPhone Error </div>
+            <label for="country">Country</label>
+            <select th:field="*{country}" id="country">
+            <option th:value="'EE'" th:text="Estonia"></option>
+            <option th:value="'LV'" th:text="Latvia"></option>
+            <option th:value="'LT'" th:text="Lithuania"></option>
+            </select>
+            <div th:if="${#fields.hasErrors('country')}" th:errors="*{country}" style="color:red">
+                country Error </div>
         </div>
+
         <div class="form-group">
             <label for="inputIdentityNumber">National identity number</label>
             <input type="text" th:field="*{nationalIdentityNumber}" class="form-control" id="inputIdentityNumber">
@@ -138,12 +143,18 @@
     </form>
 
     <form method="POST" th:action="@{/signatureRequest}" th:object="${userRequest}" enctype="multipart/form-data" class="form-action" id="signatureForm">
+
         <div class="form-group">
-            <label for="inputSignPhone">Phone number (+37XXXXXXXX)</label>
-            <input type="text" th:field="*{phoneNumber}" class="form-control" id="inputSignPhone">
-            <div th:if="${#fields.hasErrors('phoneNumber')}" th:errors="*{phoneNumber}" style="color:red">
-                phoneNumber Error </div>
+            <label for="country">Country</label>
+            <select th:field="*{country}" id="country">
+                <option th:value="'EE'" th:text="Estonia"></option>
+                <option th:value="'LV'" th:text="Latvia"></option>
+                <option th:value="'LT'" th:text="Lithuania"></option>
+            </select>
+            <div th:if="${#fields.hasErrors('country')}" th:errors="*{country}" style="color:red">
+                country Error </div>
         </div>
+
         <div class="form-group">
             <label for="inputSignIdentityNumber">National identity number</label>
             <input type="text" th:field="*{nationalIdentityNumber}" class="form-control" id="inputSignIdentityNumber">

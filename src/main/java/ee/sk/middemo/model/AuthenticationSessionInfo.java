@@ -2,7 +2,7 @@ package ee.sk.middemo.model;
 
 /*-
  * #%L
- * Mobile ID sample Java client
+ * Smart-ID sample Java client
  * %%
  * Copyright (C) 2018 - 2019 SK ID Solutions AS
  * %%
@@ -22,21 +22,24 @@ package ee.sk.middemo.model;
  * #L%
  */
 
-import ee.sk.mid.MidAuthenticationHashToSign;
+import ee.sk.smartid.AuthenticationHash;
+import ee.sk.smartid.rest.dao.SemanticsIdentifier;
 
 public class AuthenticationSessionInfo {
 
-    private MidAuthenticationHashToSign authenticationHash;
+    private AuthenticationHash authenticationHash;
     private String verificationCode;
     private UserRequest userRequest;
+    private SemanticsIdentifier semanticsIdentifier;
 
     private AuthenticationSessionInfo(Builder builder) {
         this.authenticationHash = builder.authenticationHash;
         this.verificationCode = builder.verificationCode;
         this.userRequest = builder.userRequest;
+        this.semanticsIdentifier = builder.semanticsIdentifier;
     }
 
-    public MidAuthenticationHashToSign getAuthenticationHash() {
+    public AuthenticationHash getAuthenticationHash() {
         return authenticationHash;
     }
 
@@ -48,6 +51,10 @@ public class AuthenticationSessionInfo {
         return userRequest;
     }
 
+    public SemanticsIdentifier getSemanticsIdentifier() {
+        return semanticsIdentifier;
+    }
+
     public static Builder newBuilder() {
         return new Builder();
     }
@@ -55,12 +62,14 @@ public class AuthenticationSessionInfo {
     public static class Builder {
         private String verificationCode;
         private UserRequest userRequest;
-        private MidAuthenticationHashToSign authenticationHash;
+        private AuthenticationHash authenticationHash;
+
+        private SemanticsIdentifier semanticsIdentifier;
 
         private Builder() {
         }
 
-        public Builder withAuthenticationHash(MidAuthenticationHashToSign authenticationHash) {
+        public Builder withAuthenticationHash(AuthenticationHash authenticationHash) {
             this.authenticationHash = authenticationHash;
             return this;
         }
@@ -72,6 +81,11 @@ public class AuthenticationSessionInfo {
 
         public Builder withUserRequest(UserRequest userRequest) {
             this.userRequest = userRequest;
+            return this;
+        }
+
+        public Builder withSemanticsIdentifier(SemanticsIdentifier semanticsIdentifier) {
+            this.semanticsIdentifier = semanticsIdentifier;
             return this;
         }
 

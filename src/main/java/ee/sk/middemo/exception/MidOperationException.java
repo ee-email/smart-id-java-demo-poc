@@ -2,7 +2,7 @@ package ee.sk.middemo.exception;
 
 /*-
  * #%L
- * Mobile ID sample Java client
+ * Smart-ID sample Java client
  * %%
  * Copyright (C) 2018 - 2019 SK ID Solutions AS
  * %%
@@ -38,7 +38,7 @@ public class MidOperationException extends RuntimeException {
     }
 
     public MidOperationException(List<String> errors) {
-        this.message = "MID service returned validation errors: " + String.join(", ", errors);
+        this.message = "Smart-ID service returned validation errors: " + String.join(", ", errors);
     }
 
     public String getMessage() {

@@ -1,8 +1,8 @@
-package ee.sk.middemo.services;
+package ee.sk.middemo;
 
 /*-
  * #%L
- * Mobile ID sample Java client
+ * Smart-ID sample Java client
  * %%
  * Copyright (C) 2018 - 2019 SK ID Solutions AS
  * %%
@@ -22,13 +22,25 @@ package ee.sk.middemo.services;
  * #L%
  */
 
-import ee.sk.middemo.model.SigningResult;
-import ee.sk.middemo.model.SigningSessionInfo;
-import ee.sk.middemo.model.UserRequest;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
-public interface MobileIdSignatureService {
+@SpringBootApplication
+public class SmartIdJavaDemoApplication {
 
-    SigningSessionInfo sendSignatureRequest(UserRequest userRequest);
+    @Value("${server.port}")
+    private String port;
 
-    SigningResult sign(SigningSessionInfo signingSessionInfo);
+    public static void main(String[] args) {
+        SpringApplication.run(SmartIdJavaDemoApplication.class, args);
+    }
+
+    @EventListener({ApplicationReadyEvent.class})
+    void applicationReadyEvent() {
+        System.out.println("Now open http://localhost:"+port);
+    }
+
 }

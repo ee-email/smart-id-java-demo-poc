@@ -2,7 +2,7 @@ package ee.sk.middemo.services;
 
 /*-
  * #%L
- * Mobile ID sample Java client
+ * Smart-ID sample Java client
  * %%
  * Copyright (C) 2018 - 2019 SK ID Solutions AS
  * %%
@@ -22,13 +22,13 @@ package ee.sk.middemo.services;
  * #L%
  */
 
-import ee.sk.mid.MidAuthenticationIdentity;
 import ee.sk.middemo.model.AuthenticationSessionInfo;
 import ee.sk.middemo.model.UserRequest;
+import ee.sk.smartid.AuthenticationIdentity;
 
-public interface MobileIdAuthenticationService {
+public interface SmartIdAuthenticationService {
 
     AuthenticationSessionInfo startAuthentication(UserRequest userRequest);
 
-    MidAuthenticationIdentity authenticate(AuthenticationSessionInfo authenticationSessionInfo);
+    AuthenticationIdentity authenticate(AuthenticationSessionInfo authenticationSessionInfo);
 }

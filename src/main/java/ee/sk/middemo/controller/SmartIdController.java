@@ -2,7 +2,7 @@ package ee.sk.middemo.controller;
 
 /*-
  * #%L
- * Mobile ID sample Java client
+ * Smart-ID sample Java client
  * %%
  * Copyright (C) 2018 - 2019 SK ID Solutions AS
  * %%
@@ -22,12 +22,12 @@ package ee.sk.middemo.controller;
  * #L%
  */
 
-import ee.sk.mid.MidAuthenticationIdentity;
 import ee.sk.middemo.exception.FileUploadException;
 import ee.sk.middemo.exception.MidOperationException;
 import ee.sk.middemo.model.*;
-import ee.sk.middemo.services.MobileIdAuthenticationService;
-import ee.sk.middemo.services.MobileIdSignatureService;
+import ee.sk.middemo.services.SmartIdAuthenticationService;
+import ee.sk.middemo.services.SmartIdSignatureService;
+import ee.sk.smartid.AuthenticationIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,19 +39,19 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.validation.Valid;
 
 @RestController
-public class MobileIdController {
-    Logger logger = LoggerFactory.getLogger(MobileIdController.class);
+public class SmartIdController {
+    Logger logger = LoggerFactory.getLogger(SmartIdController.class);
 
-    private MobileIdSignatureService signatureService;
-    private MobileIdAuthenticationService authenticationService;
+    private SmartIdSignatureService signatureService;
+    private SmartIdAuthenticationService authenticationService;
 
-    private UserMidSession userMidSession;
+    private UserSidSession userSidSession;
 
     @Autowired
-    public MobileIdController(MobileIdSignatureService signatureService, MobileIdAuthenticationService authenticationService, UserMidSession userMidSession) {
+    public SmartIdController(SmartIdSignatureService signatureService, SmartIdAuthenticationService authenticationService, UserSidSession userSidSession) {
         this.signatureService = signatureService;
         this.authenticationService = authenticationService;
-        this.userMidSession = userMidSession; // session scope, autowired
+        this.userSidSession = userSidSession; // session scope, autowired
     }
 
     @GetMapping(value = "/")
@@ -73,7 +73,7 @@ public class MobileIdController {
 
         SigningSessionInfo signingSessionInfo = signatureService.sendSignatureRequest(userRequest);
 
-        userMidSession.setSigningSessionInfo(signingSessionInfo);
+        userSidSession.setSigningSessionInfo(signingSessionInfo);
 
         model.addAttribute("signingSessionInfo", signingSessionInfo);
 
@@ -83,9 +83,9 @@ public class MobileIdController {
     @PostMapping(value = "/sign")
     public ModelAndView sign(ModelMap model) {
 
-        SigningResult signingResult = signatureService.sign(userMidSession.getSigningSessionInfo());
+        SigningResult signingResult = signatureService.sign(userSidSession.getSigningSessionInfo());
 
-        userMidSession.clearSigningSession();
+        userSidSession.clearSigningSession();
 
         model.addAttribute("signingResult", signingResult);
 
@@ -102,7 +102,7 @@ public class MobileIdController {
         }
 
         AuthenticationSessionInfo authenticationSessionInfo = authenticationService.startAuthentication(userRequest);
-        userMidSession.setAuthenticationSessionInfo(authenticationSessionInfo);
+        userSidSession.setAuthenticationSessionInfo(authenticationSessionInfo);
 
         model.addAttribute("verificationCode", authenticationSessionInfo.getVerificationCode());
 
@@ -111,10 +111,10 @@ public class MobileIdController {
 
     @PostMapping(value = "/authenticate")
     public ModelAndView authenticate(ModelMap model) {
-        MidAuthenticationIdentity person = authenticationService.authenticate(userMidSession.getAuthenticationSessionInfo());
+        AuthenticationIdentity person = authenticationService.authenticate(userSidSession.getAuthenticationSessionInfo());
         model.addAttribute("person", person);
 
-        userMidSession.clearAuthenticationSessionInfo();
+        userSidSession.clearAuthenticationSessionInfo();
 
         return new ModelAndView("authenticationResult", model);
     }

@@ -10,7 +10,7 @@ List of 132 third-party dependencies (auto-generated on 2019-02-19 with License 
 *  (The Apache Software License, Version 2.0) Jackson datatype: JSR310 (com.fasterxml.jackson.datatype:jackson-datatype-jsr310:2.9.8 - https://github.com/FasterXML/jackson-modules-java8/jackson-datatype-jsr310)
 *  (The Apache Software License, Version 2.0) Jackson module: JAXB Annotations (com.fasterxml.jackson.module:jackson-module-jaxb-annotations:2.9.8 - https://github.com/FasterXML/jackson-modules-base)
 *  (The Apache Software License, Version 2.0) Jackson-module-parameter-names (com.fasterxml.jackson.module:jackson-module-parameter-names:2.9.8 - https://github.com/FasterXML/jackson-modules-java8/jackson-module-parameter-names)
-*  (MIT License) Mobile-ID Java client (com.github.aasaru:mid-rest-java-client:2f70db2 - https://github.com/aasaru/mid-rest-java-client)
+*  (MIT License) Smart-ID Java client (com.github.aasaru:mid-rest-java-client:2f70db2 - https://github.com/aasaru/mid-rest-java-client)
 *  (The Apache Software License, Version 2.0) Guava: Google Core Libraries for Java (com.google.guava:guava:20.0 - https://github.com/google/guava/guava)
 *  (The Apache Software License, Version 2.0) project ':json-path' (com.jayway.jsonpath:json-path:2.4.0 - https://github.com/jayway/JsonPath)
 *  (CDDL 1.1) (GPL2 w/ CPE) istack common utility code runtime (com.sun.istack:istack-commons-runtime:3.0.7 - http://java.net/istack-commons/istack-commons-runtime/)

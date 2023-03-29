@@ -2,7 +2,7 @@ package ee.sk.middemo.services;
 
 /*-
  * #%L
- * Mobile ID sample Java client
+ * Smart-ID sample Java client
  * %%
  * Copyright (C) 2018 - 2019 SK ID Solutions AS
  * %%
@@ -22,11 +22,13 @@ package ee.sk.middemo.services;
  * #L%
  */
 
-import java.security.cert.X509Certificate;
-
+import ee.sk.middemo.model.SigningResult;
+import ee.sk.middemo.model.SigningSessionInfo;
 import ee.sk.middemo.model.UserRequest;
 
-public interface MobileIdCertificateService {
+public interface SmartIdSignatureService {
 
-    X509Certificate getCertificate(UserRequest userRequest);
+    SigningSessionInfo sendSignatureRequest(UserRequest userRequest);
+
+    SigningResult sign(SigningSessionInfo signingSessionInfo);
 }

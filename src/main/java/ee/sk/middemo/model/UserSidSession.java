@@ -2,7 +2,7 @@ package ee.sk.middemo.model;
 
 /*-
  * #%L
- * Mobile ID sample Java client
+ * Smart-ID sample Java client
  * %%
  * Copyright (C) 2018 - 2019 SK ID Solutions AS
  * %%
@@ -22,7 +22,7 @@ package ee.sk.middemo.model;
  * #L%
  */
 
-public class UserMidSession {
+public class UserSidSession {
     private SigningSessionInfo signingSessionInfo;
     private AuthenticationSessionInfo authenticationSessionInfo;
 

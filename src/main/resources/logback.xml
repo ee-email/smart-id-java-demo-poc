@@ -21,7 +21,7 @@
     </logger>
 
     <!-- set this to TRACE if you want to log actual payloads and headers sent out -->
-    <logger name="ee.sk.mid.rest.MidLoggingFilter" level="trace" additivity="false">
+    <logger name="ee.sk.smartid.rest" level="trace" additivity="false">
         <appender-ref ref="Console" />
     </logger>
 

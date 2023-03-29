@@ -7,9 +7,9 @@ mid:
   client:
     relyingPartyUuid: 00000000-0000-0000-0000-000000000000
     relyingPartyName: DEMO
-    applicationProviderHost: https://tsp.demo.sk.ee/mid-api
+    applicationProviderHost: https://sid.demo.sk.ee/smart-id-rp/v2/
   auth:
-    displayText: Log in with MID demo?
+    displayText: Log in with Smart-ID demo?
     displayTextFormat: GSM7
     displayTextLanguage: ENG
   sign:
@@ -18,8 +18,9 @@ mid:
     displayTextLanguage: RUS
   truststore:
     trusted-server-ssl-certs:
-      filename: /mid.trusted_server_certs.p12
+      filename: /sid.trusted_server_certs.p12
       password: changeit
     trusted-root-certs:
-      filename: /mid.trusted_root_certs.p12
+      filename: /sid.trusted_root_certs.p12
       password: changeit
+

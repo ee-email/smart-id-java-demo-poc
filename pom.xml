@@ -8,10 +8,10 @@
         <version>2.6.4</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
-    <groupId>ee.sk.mid</groupId>
-    <artifactId>mid-rest-java-demo</artifactId>
+    <groupId>ee.sk.sid</groupId>
+    <artifactId>smart-id-java-demo</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <name>mid-rest-java-demo</name>
+    <name>Smart-ID java demo</name>
 
     <properties>
         <java.version>1.8</java.version>
@@ -44,15 +44,22 @@
         </dependency>
 
         <dependency>
-            <groupId>ee.sk.mid</groupId>
-            <artifactId>mid-rest-java-client</artifactId>
-            <version>1.3</version>
+            <groupId>javax.validation</groupId>
+            <artifactId>validation-api</artifactId>
+            <version>2.0.1.Final</version>
         </dependency>
 
         <dependency>
             <groupId>ee.sk.smartid</groupId>
             <artifactId>smart-id-java-client</artifactId>
             <version>2.1.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
         </dependency>
 
 
@@ -82,7 +89,7 @@
                 <configuration>
                     <licenseName>lgpl_v3</licenseName>
                     <organizationName>SK ID Solutions AS </organizationName>
-                    <projectName>Mobile ID sample Java client</projectName>
+                    <projectName>Smart-ID sample Java client</projectName>
                     <inceptionYear>2018</inceptionYear>
                     <encoding>UTF-8</encoding>
                     <roots>

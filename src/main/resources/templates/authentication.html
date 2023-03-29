@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Mobile-ID</title>
+    <title>Smart-ID</title>
     <!-- Bootstrap core CSS -->
     <link href="../static/css/bootstrap.css" rel="stylesheet" th:href="@{/css/bootstrap.css}"/>
 
@@ -39,7 +39,7 @@
     <div class="navbar navbar-dark bg-dark shadow-sm">
         <div class="container d-flex justify-content-between">
             <a href="/" class="navbar-brand d-flex align-items-center">
-                <strong>Mobile-ID Demo</strong>
+                <strong>Smart-ID Demo</strong>
             </a>
         </div>
     </div>
@@ -49,7 +49,7 @@
     <div class="alert alert-secondary" role="alert">
         <h4 class="alert-heading text-center" th:text="${verificationCode}"></h4>
 
-        <p>Enter the Mobile-ID PIN1 into your phone after you receive a SMS with the same control code you can see here.</p>
+        <p>Enter the Smart-ID PIN1 into your phone after you receive a SMS with the same control code you can see here.</p>
 
     </div>
     <form method="POST" th:action="@{/authenticate}" name="authenticationConfirm"></form>
