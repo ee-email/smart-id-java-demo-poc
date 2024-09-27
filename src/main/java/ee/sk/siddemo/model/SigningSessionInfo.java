@@ -10,32 +10,32 @@ package ee.sk.siddemo.model;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
 
-import ee.sk.smartid.SignableHash;
-
 import org.digidoc4j.Container;
 import org.digidoc4j.DataToSign;
 
+import ee.sk.smartid.SignableHash;
+
 public class SigningSessionInfo {
 
-    private String sessionID;
-    private String verificationCode;
-    private DataToSign dataToSign;
-    private Container container;
-    private SignableHash hashToSign;
+    private final String sessionID;
+    private final String verificationCode;
+    private final DataToSign dataToSign;
+    private final Container container;
+    private final SignableHash hashToSign;
 
-    private String documentNumber;
+    private final String documentNumber;
 
     private SigningSessionInfo(Builder builder) {
         this.sessionID = builder.sessionID;
@@ -100,10 +100,12 @@ public class SigningSessionInfo {
             this.dataToSign = dataToSign;
             return this;
         }
+
         public Builder withContainer(Container container) {
             this.container = container;
             return this;
         }
+
         public Builder withDocumentNumber(String documentNumber) {
             this.documentNumber = documentNumber;
             return this;

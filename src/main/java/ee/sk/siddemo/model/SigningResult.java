@@ -10,12 +10,12 @@ package ee.sk.siddemo.model;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
@@ -26,10 +26,10 @@ import java.util.Date;
 
 public class SigningResult {
 
-    private String result;
-    private Boolean valid;
-    private Date timestamp;
-    private String containerFilePath;
+    private final String result;
+    private final Boolean valid;
+    private final Date timestamp;
+    private final String containerFilePath;
 
     private SigningResult(Builder builder) {
         this.result = builder.result;

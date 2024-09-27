@@ -10,22 +10,35 @@ package ee.sk.siddemo.services;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
 
+import java.time.LocalDate;
+import java.util.Collections;
+import java.util.Optional;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import ee.sk.siddemo.exception.SidOperationException;
 import ee.sk.siddemo.model.AuthenticationSessionInfo;
 import ee.sk.siddemo.model.UserRequest;
-import ee.sk.smartid.*;
+import ee.sk.smartid.AuthenticationHash;
+import ee.sk.smartid.AuthenticationIdentity;
+import ee.sk.smartid.AuthenticationResponseValidator;
+import ee.sk.smartid.SmartIdAuthenticationResponse;
+import ee.sk.smartid.SmartIdClient;
 import ee.sk.smartid.exception.UnprocessableSmartIdResponseException;
 import ee.sk.smartid.exception.permanent.ServerMaintenanceException;
 import ee.sk.smartid.exception.useraccount.CertificateLevelMismatchException;
@@ -36,29 +49,23 @@ import ee.sk.smartid.exception.useraction.UserRefusedException;
 import ee.sk.smartid.exception.useraction.UserSelectedWrongVerificationCodeException;
 import ee.sk.smartid.rest.dao.Interaction;
 import ee.sk.smartid.rest.dao.SemanticsIdentifier;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.time.LocalDate;
-import java.util.Collections;
-import java.util.Optional;
 
 @Service
 public class SmartIdAuthenticationServiceImpl implements SmartIdAuthenticationService {
 
-    Logger logger = LoggerFactory.getLogger(SmartIdSignatureServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(SmartIdAuthenticationServiceImpl.class);
 
     @Value("${sid.auth.displayText}")
     private String sidAuthDisplayText;
 
-    @Autowired
-    private SmartIdClient client;
+    private final SmartIdClient client;
+    private final AuthenticationResponseValidator sidAuthenticationResponseValidator;
 
-    @Autowired
-    private AuthenticationResponseValidator sidAuthenticationResponseValidator;
+    public SmartIdAuthenticationServiceImpl(SmartIdClient client,
+                                            AuthenticationResponseValidator sidAuthenticationResponseValidator) {
+        this.client = client;
+        this.sidAuthenticationResponseValidator = sidAuthenticationResponseValidator;
+    }
 
     @Override
     public AuthenticationSessionInfo startAuthentication(UserRequest userRequest) {

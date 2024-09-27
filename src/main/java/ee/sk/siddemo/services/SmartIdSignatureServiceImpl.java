@@ -22,22 +22,21 @@ package ee.sk.siddemo.services;
  * #L%
  */
 
-import ee.sk.siddemo.exception.FileUploadException;
-import ee.sk.siddemo.exception.SidOperationException;
-import ee.sk.siddemo.model.SigningResult;
-import ee.sk.siddemo.model.SigningSessionInfo;
-import ee.sk.siddemo.model.UserRequest;
-import ee.sk.smartid.*;
-import ee.sk.smartid.exception.permanent.ServerMaintenanceException;
-import ee.sk.smartid.exception.useraccount.DocumentUnusableException;
-import ee.sk.smartid.exception.useraccount.UserAccountNotFoundException;
-import ee.sk.smartid.exception.useraction.SessionTimeoutException;
-import ee.sk.smartid.exception.useraction.UserRefusedException;
-import ee.sk.smartid.exception.useraction.UserSelectedWrongVerificationCodeException;
-import ee.sk.smartid.rest.SmartIdConnector;
-import ee.sk.smartid.rest.dao.*;
+import static java.util.Arrays.asList;
 
-import org.digidoc4j.*;
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import org.digidoc4j.Configuration;
+import org.digidoc4j.Container;
+import org.digidoc4j.ContainerBuilder;
+import org.digidoc4j.DataFile;
+import org.digidoc4j.DataToSign;
+import org.digidoc4j.DigestAlgorithm;
+import org.digidoc4j.Signature;
+import org.digidoc4j.SignatureBuilder;
+import org.digidoc4j.SignatureProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,17 +44,32 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import static java.util.Arrays.asList;
+import ee.sk.siddemo.exception.FileUploadException;
+import ee.sk.siddemo.exception.SidOperationException;
+import ee.sk.siddemo.model.SigningResult;
+import ee.sk.siddemo.model.SigningSessionInfo;
+import ee.sk.siddemo.model.UserRequest;
+import ee.sk.smartid.HashType;
+import ee.sk.smartid.SignableData;
+import ee.sk.smartid.SignableHash;
+import ee.sk.smartid.SmartIdCertificate;
+import ee.sk.smartid.SmartIdClient;
+import ee.sk.smartid.SmartIdSignature;
+import ee.sk.smartid.exception.permanent.ServerMaintenanceException;
+import ee.sk.smartid.exception.useraccount.DocumentUnusableException;
+import ee.sk.smartid.exception.useraccount.UserAccountNotFoundException;
+import ee.sk.smartid.exception.useraction.SessionTimeoutException;
+import ee.sk.smartid.exception.useraction.UserRefusedException;
+import ee.sk.smartid.exception.useraction.UserSelectedWrongVerificationCodeException;
+import ee.sk.smartid.rest.SmartIdConnector;
+import ee.sk.smartid.rest.dao.Interaction;
+import ee.sk.smartid.rest.dao.SemanticsIdentifier;
+import ee.sk.smartid.rest.dao.SessionStatus;
 
 @Service
 public class SmartIdSignatureServiceImpl implements SmartIdSignatureService {
 
-    Logger logger = LoggerFactory.getLogger(SmartIdSignatureServiceImpl.class);
-
+    private static final Logger logger = LoggerFactory.getLogger(SmartIdSignatureServiceImpl.class);
 
     @Value("${sid.sign.displayText}")
     private String sidSignDisplayText;
@@ -66,13 +80,12 @@ public class SmartIdSignatureServiceImpl implements SmartIdSignatureService {
     @Value("${sid.client.relyingPartyName}")
     private String sidRelyingPartyName;
 
-    private SmartIdCertificateService certificateService;
+    private final SmartIdCertificateService certificateService;
+    private final SmartIdClient client;
 
-    @Autowired
-    private SmartIdClient client;
-
-    public SmartIdSignatureServiceImpl(SmartIdCertificateService certificateService) {
+    public SmartIdSignatureServiceImpl(SmartIdCertificateService certificateService, SmartIdClient client) {
         this.certificateService = certificateService;
+        this.client = client;
     }
 
     @Override
