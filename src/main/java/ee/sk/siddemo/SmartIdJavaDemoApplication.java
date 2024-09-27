@@ -1,4 +1,4 @@
-package ee.sk.middemo.services;
+package ee.sk.siddemo;
 
 /*-
  * #%L
@@ -22,13 +22,25 @@ package ee.sk.middemo.services;
  * #L%
  */
 
-import ee.sk.middemo.model.AuthenticationSessionInfo;
-import ee.sk.middemo.model.UserRequest;
-import ee.sk.smartid.AuthenticationIdentity;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
-public interface SmartIdAuthenticationService {
+@SpringBootApplication
+public class SmartIdJavaDemoApplication {
 
-    AuthenticationSessionInfo startAuthentication(UserRequest userRequest);
+    @Value("${server.port}")
+    private String port;
 
-    AuthenticationIdentity authenticate(AuthenticationSessionInfo authenticationSessionInfo);
+    public static void main(String[] args) {
+        SpringApplication.run(SmartIdJavaDemoApplication.class, args);
+    }
+
+    @EventListener({ApplicationReadyEvent.class})
+    void applicationReadyEvent() {
+        System.out.println("Now open http://localhost:"+port);
+    }
+
 }

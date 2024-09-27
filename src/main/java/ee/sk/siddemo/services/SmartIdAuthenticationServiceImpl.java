@@ -1,4 +1,4 @@
-package ee.sk.middemo.services;
+package ee.sk.siddemo.services;
 
 /*-
  * #%L
@@ -22,9 +22,9 @@ package ee.sk.middemo.services;
  * #L%
  */
 
-import ee.sk.middemo.exception.MidOperationException;
-import ee.sk.middemo.model.AuthenticationSessionInfo;
-import ee.sk.middemo.model.UserRequest;
+import ee.sk.siddemo.exception.SidOperationException;
+import ee.sk.siddemo.model.AuthenticationSessionInfo;
+import ee.sk.siddemo.model.UserRequest;
 import ee.sk.smartid.*;
 import ee.sk.smartid.exception.UnprocessableSmartIdResponseException;
 import ee.sk.smartid.exception.permanent.ServerMaintenanceException;
@@ -51,14 +51,14 @@ public class SmartIdAuthenticationServiceImpl implements SmartIdAuthenticationSe
 
     Logger logger = LoggerFactory.getLogger(SmartIdSignatureServiceImpl.class);
 
-    @Value("${mid.auth.displayText}")
-    private String midAuthDisplayText;
+    @Value("${sid.auth.displayText}")
+    private String sidAuthDisplayText;
 
     @Autowired
     private SmartIdClient client;
 
     @Autowired
-    private AuthenticationResponseValidator midAuthenticationResponseValidator;
+    private AuthenticationResponseValidator sidAuthenticationResponseValidator;
 
     @Override
     public AuthenticationSessionInfo startAuthentication(UserRequest userRequest) {
@@ -100,13 +100,13 @@ public class SmartIdAuthenticationServiceImpl implements SmartIdAuthenticationSe
                     .withCertificateLevel("QUALIFIED") // Certificate level can either be "QUALIFIED" or "ADVANCED"
                     // Smart-ID app will display verification code to the user and user must insert PIN1
                     .withAllowedInteractionsOrder(
-                            Collections.singletonList(Interaction.displayTextAndPIN(midAuthDisplayText)
+                            Collections.singletonList(Interaction.displayTextAndPIN(sidAuthDisplayText)
                             ))
                     .authenticate();
 
 
 // throws SmartIdResponseValidationException if validation doesn't pass
-            authIdentity = midAuthenticationResponseValidator.validate(response);
+            authIdentity = sidAuthenticationResponseValidator.validate(response);
 
             String givenName = authIdentity.getGivenName(); // e.g. Mari-Liis"
             String surname = authIdentity.getSurname(); // e.g. "Männik"
@@ -116,21 +116,21 @@ public class SmartIdAuthenticationServiceImpl implements SmartIdAuthenticationSe
 
 
         } catch (UserAccountNotFoundException e) {
-            throw new MidOperationException("User account was not found", e);
+            throw new SidOperationException("User account was not found", e);
         } catch (UserRefusedException e) {
-            throw new MidOperationException("User refused", e);
+            throw new SidOperationException("User refused", e);
         } catch (UserSelectedWrongVerificationCodeException e) {
-            throw new MidOperationException("User selected wrong verification code", e);
+            throw new SidOperationException("User selected wrong verification code", e);
         } catch (SessionTimeoutException e) {
-            throw new MidOperationException("Session Timeout", e);
+            throw new SidOperationException("Session Timeout", e);
         } catch (DocumentUnusableException e) {
-            throw new MidOperationException("Document Unusable", e);
+            throw new SidOperationException("Document Unusable", e);
         } catch (ServerMaintenanceException e) {
-            throw new MidOperationException("Server is under maintenance", e);
+            throw new SidOperationException("Server is under maintenance", e);
         } catch (UnprocessableSmartIdResponseException e) {
-            throw new MidOperationException("SID internal error (Unprocessable Smart-ID response)", e);
+            throw new SidOperationException("SID internal error (Unprocessable Smart-ID response)", e);
         } catch (CertificateLevelMismatchException e) {
-            throw new MidOperationException("Certificate Level Mismatch", e);
+            throw new SidOperationException("Certificate Level Mismatch", e);
         }
 
         return authIdentity;

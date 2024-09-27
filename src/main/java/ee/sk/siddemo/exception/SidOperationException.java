@@ -1,4 +1,4 @@
-package ee.sk.middemo.services;
+package ee.sk.siddemo.exception;
 
 /*-
  * #%L
@@ -22,10 +22,27 @@ package ee.sk.middemo.services;
  * #L%
  */
 
-import ee.sk.middemo.model.UserRequest;
-import ee.sk.smartid.SmartIdCertificate;
+import java.util.List;
 
-public interface SmartIdCertificateService {
+public class SidOperationException extends RuntimeException {
 
-    SmartIdCertificate getCertificate(UserRequest userRequest);
+    private String message;
+
+    public SidOperationException(String message) {
+        this.message = message;
+    }
+
+    public SidOperationException(String message, Throwable cause) {
+        super(cause);
+        this.message = message + " Cause: " +  cause.getMessage();
+    }
+
+    public SidOperationException(List<String> errors) {
+        this.message = "Smart-ID service returned validation errors: " + String.join(", ", errors);
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
 }

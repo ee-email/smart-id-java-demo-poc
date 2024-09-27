@@ -1,4 +1,4 @@
-package ee.sk.middemo;
+package ee.sk.siddemo;
 
 /*-
  * #%L
@@ -22,7 +22,7 @@ package ee.sk.middemo;
  * #L%
  */
 
-import ee.sk.middemo.model.UserSidSession;
+import ee.sk.siddemo.model.UserSidSession;
 import ee.sk.smartid.AuthenticationResponseValidator;
 import ee.sk.smartid.SmartIdClient;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,40 +42,38 @@ import java.util.List;
 @Configuration
 public class Config {
 
-    @Value("${mid.client.relyingPartyUuid}")
-    private String midRelyingPartyUuid;
+    @Value("${sid.client.relyingPartyUuid}")
+    private String sidRelyingPartyUuid;
 
-    @Value("${mid.client.relyingPartyName}")
-    private String midRelyingPartyName;
+    @Value("${sid.client.relyingPartyName}")
+    private String sidRelyingPartyName;
 
-    @Value("${mid.client.applicationProviderHost}")
-    private String midApplicationProviderHost;
+    @Value("${sid.client.applicationProviderHost}")
+    private String sidApplicationProviderHost;
 
-    @Value("${mid.truststore.trusted-server-ssl-certs.filename}")
-    private String midTrustedServerSslCertsFilename;
+    @Value("${sid.truststore.trusted-server-ssl-certs.filename}")
+    private String sidTrustedServerSslCertsFilename;
 
-    @Value("${mid.truststore.trusted-server-ssl-certs.password}")
-    private String midTrustedServerSslCertsPassword;
+    @Value("${sid.truststore.trusted-server-ssl-certs.password}")
+    private String sidTrustedServerSslCertsPassword;
 
-    @Value("${mid.truststore.trusted-root-certs.filename}")
-    private String midTrustedRootCertsFilename;
+    @Value("${sid.truststore.trusted-root-certs.filename}")
+    private String sidTrustedRootCertsFilename;
 
-    @Value("${mid.truststore.trusted-root-certs.password}")
-    private String midTrustedRootCertsPassword;
+    @Value("${sid.truststore.trusted-root-certs.password}")
+    private String sidTrustedRootCertsPassword;
 
     @Bean
-    public SmartIdClient mobileIdClient() throws Exception {
-
-        InputStream is = Config.class.getResourceAsStream(midTrustedServerSslCertsFilename);
+    public SmartIdClient smartIdClient() throws Exception {
+        InputStream is = Config.class.getResourceAsStream(sidTrustedServerSslCertsFilename);
         KeyStore trustStore = KeyStore.getInstance("PKCS12");
-        trustStore.load(is, midTrustedServerSslCertsPassword.toCharArray());
-
+        trustStore.load(is, sidTrustedServerSslCertsPassword.toCharArray());
 
         // Client setup. Note that these values are demo environment specific.
         SmartIdClient client = new SmartIdClient();
-        client.setRelyingPartyUUID(midRelyingPartyUuid);
-        client.setRelyingPartyName(midRelyingPartyName);
-        client.setHostUrl("https://sid.demo.sk.ee/smart-id-rp/v2/");
+        client.setRelyingPartyUUID(sidRelyingPartyUuid);
+        client.setRelyingPartyName(sidRelyingPartyName);
+        client.setHostUrl(sidApplicationProviderHost);
         client.setTrustStore(trustStore);
 
         return client;
@@ -89,14 +87,14 @@ public class Config {
     }
 
     @Bean
-    public AuthenticationResponseValidator midResponseValidator() throws Exception {
+    public AuthenticationResponseValidator sidResponseValidator() throws Exception {
 
         List<X509Certificate> certificates = new ArrayList<>();
 
-        InputStream is = Config.class.getResourceAsStream(midTrustedRootCertsFilename);
+        InputStream is = Config.class.getResourceAsStream(sidTrustedRootCertsFilename);
 
         KeyStore keystore = KeyStore.getInstance(KeyStore.getDefaultType());
-        keystore.load(is, midTrustedRootCertsPassword.toCharArray());
+        keystore.load(is, sidTrustedRootCertsPassword.toCharArray());
         Enumeration<String> aliases = keystore.aliases();
 
         while (aliases.hasMoreElements()) {

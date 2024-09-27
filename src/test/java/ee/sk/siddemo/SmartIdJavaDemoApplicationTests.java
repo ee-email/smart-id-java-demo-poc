@@ -1,4 +1,4 @@
-package ee.sk.middemo;
+package ee.sk.siddemo;
 
 /*-
  * #%L
@@ -29,7 +29,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class MidRestJavaDemoApplicationTests {
+public class SmartIdJavaDemoApplicationTests {
 
     @Test
     public void contextLoads() {

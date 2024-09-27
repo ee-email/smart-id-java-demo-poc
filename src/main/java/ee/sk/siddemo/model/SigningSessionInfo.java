@@ -1,4 +1,4 @@
-package ee.sk.middemo.model;
+package ee.sk.siddemo.model;
 
 /*-
  * #%L
@@ -22,9 +22,8 @@ package ee.sk.middemo.model;
  * #L%
  */
 
-import ee.sk.smartid.SignableData;
 import ee.sk.smartid.SignableHash;
-import ee.sk.smartid.rest.dao.SemanticsIdentifier;
+
 import org.digidoc4j.Container;
 import org.digidoc4j.DataToSign;
 

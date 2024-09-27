@@ -1,4 +1,4 @@
-package ee.sk.middemo.controller;
+package ee.sk.siddemo.controller;
 
 /*-
  * #%L
@@ -22,11 +22,11 @@ package ee.sk.middemo.controller;
  * #L%
  */
 
-import ee.sk.middemo.exception.FileUploadException;
-import ee.sk.middemo.exception.MidOperationException;
-import ee.sk.middemo.model.*;
-import ee.sk.middemo.services.SmartIdAuthenticationService;
-import ee.sk.middemo.services.SmartIdSignatureService;
+import ee.sk.siddemo.exception.FileUploadException;
+import ee.sk.siddemo.exception.SidOperationException;
+import ee.sk.siddemo.model.*;
+import ee.sk.siddemo.services.SmartIdAuthenticationService;
+import ee.sk.siddemo.services.SmartIdSignatureService;
 import ee.sk.smartid.AuthenticationIdentity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,20 +125,20 @@ public class SmartIdController {
 
         model.addAttribute("errorMessage", "File upload error");
 
-        return new ModelAndView("midOperationError", model);
+        return new ModelAndView("sidOperationError", model);
     }
 
-    @ExceptionHandler(MidOperationException.class)
-    public ModelAndView handleMidOperationException(MidOperationException exception) {
+    @ExceptionHandler(SidOperationException.class)
+    public ModelAndView handleSidOperationException(SidOperationException exception) {
         ModelMap model = new ModelMap();
 
         model.addAttribute("errorMessage", exception.getMessage());
 
-        return new ModelAndView("midOperationError", model);
+        return new ModelAndView("sidOperationError", model);
     }
 
     @ExceptionHandler(Exception.class)
-    public ModelAndView handleMobileIdException(Exception exception) {
+    public ModelAndView handleSmartIdException(Exception exception) {
         logger.warn("Generic error caught", exception);
 
         ModelMap model = new ModelMap();

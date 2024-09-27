@@ -1,4 +1,4 @@
-package ee.sk.middemo.services;
+package ee.sk.siddemo.services;
 
 /*-
  * #%L
@@ -22,9 +22,9 @@ package ee.sk.middemo.services;
  * #L%
  */
 
-import ee.sk.middemo.model.SigningResult;
-import ee.sk.middemo.model.SigningSessionInfo;
-import ee.sk.middemo.model.UserRequest;
+import ee.sk.siddemo.model.SigningResult;
+import ee.sk.siddemo.model.SigningSessionInfo;
+import ee.sk.siddemo.model.UserRequest;
 
 public interface SmartIdSignatureService {
 

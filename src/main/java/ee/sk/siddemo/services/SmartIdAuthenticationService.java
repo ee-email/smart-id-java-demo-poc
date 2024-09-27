@@ -1,4 +1,4 @@
-package ee.sk.middemo.exception;
+package ee.sk.siddemo.services;
 
 /*-
  * #%L
@@ -22,9 +22,13 @@ package ee.sk.middemo.exception;
  * #L%
  */
 
-public class FileUploadException extends RuntimeException {
+import ee.sk.siddemo.model.AuthenticationSessionInfo;
+import ee.sk.siddemo.model.UserRequest;
+import ee.sk.smartid.AuthenticationIdentity;
 
-    public FileUploadException(Throwable cause) {
-        super(cause);
-    }
+public interface SmartIdAuthenticationService {
+
+    AuthenticationSessionInfo startAuthentication(UserRequest userRequest);
+
+    AuthenticationIdentity authenticate(AuthenticationSessionInfo authenticationSessionInfo);
 }

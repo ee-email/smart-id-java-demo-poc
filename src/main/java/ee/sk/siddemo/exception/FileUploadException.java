@@ -1,4 +1,4 @@
-package ee.sk.middemo.exception;
+package ee.sk.siddemo.exception;
 
 /*-
  * #%L
@@ -22,27 +22,9 @@ package ee.sk.middemo.exception;
  * #L%
  */
 
-import java.util.List;
+public class FileUploadException extends RuntimeException {
 
-public class MidOperationException extends RuntimeException {
-
-    private String message;
-
-    public MidOperationException(String message) {
-        this.message = message;
-    }
-
-    public MidOperationException(String message, Throwable cause) {
+    public FileUploadException(Throwable cause) {
         super(cause);
-        this.message = message + " Cause: " +  cause.getMessage();
     }
-
-    public MidOperationException(List<String> errors) {
-        this.message = "Smart-ID service returned validation errors: " + String.join(", ", errors);
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
 }
