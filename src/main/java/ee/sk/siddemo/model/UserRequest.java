@@ -30,12 +30,12 @@ import org.springframework.web.multipart.MultipartFile;
 public class UserRequest {
 
     @NotNull
-    @Pattern(regexp = "[EE|LV|LT]",
+    @Pattern(regexp = "(EE|LV|LT|BE)",
             message = "Invalid country number")
     private String country;
 
     @NotNull
-    @Pattern(regexp = "[0-9]{11}",
+    @Pattern(regexp = "([0-9]{11})|([0-9]{6}-[0-9]{5})",
             message = "Invalid national identity number")
     private String nationalIdentityNumber;
 

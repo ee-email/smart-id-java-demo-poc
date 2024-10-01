@@ -118,7 +118,7 @@ public class SmartIdAuthenticationServiceImpl implements SmartIdAuthenticationSe
             String givenName = authIdentity.getGivenName(); // e.g. Mari-Liis"
             String surname = authIdentity.getSurname(); // e.g. "Männik"
             String identityCode = authIdentity.getIdentityCode(); // e.g. "47101010033"
-            String country = authIdentity.getCountry(); // e.g. "EE", "LV", "LT"
+            String country = authIdentity.getCountry(); // e.g. "EE", "LV", "LT", "BE"
             Optional<LocalDate> dateOfBirth = authIdentity.getDateOfBirth(); // see next paragraph
 
 
