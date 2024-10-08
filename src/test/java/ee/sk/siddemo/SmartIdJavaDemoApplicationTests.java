@@ -1,4 +1,4 @@
-package ee.sk.middemo;
+package ee.sk.siddemo;
 
 /*-
  * #%L
@@ -22,25 +22,16 @@ package ee.sk.middemo;
  * #L%
  */
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.context.event.ApplicationReadyEvent;
-import org.springframework.context.event.EventListener;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
-@SpringBootApplication
-public class SmartIdJavaDemoApplication {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+public class SmartIdJavaDemoApplicationTests {
 
-    @Value("${server.port}")
-    private String port;
-
-    public static void main(String[] args) {
-        SpringApplication.run(SmartIdJavaDemoApplication.class, args);
+    @Test
+    public void contextLoads() {
     }
-
-    @EventListener({ApplicationReadyEvent.class})
-    void applicationReadyEvent() {
-        System.out.println("Now open http://localhost:"+port);
-    }
-
 }

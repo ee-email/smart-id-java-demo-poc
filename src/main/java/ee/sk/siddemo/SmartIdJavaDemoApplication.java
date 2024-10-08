@@ -1,4 +1,4 @@
-package ee.sk.middemo.exception;
+package ee.sk.siddemo;
 
 /*-
  * #%L
@@ -10,39 +10,37 @@ package ee.sk.middemo.exception;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
 
-import java.util.List;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 
-public class MidOperationException extends RuntimeException {
+@SpringBootApplication
+public class SmartIdJavaDemoApplication {
 
-    private String message;
+    @Value("${server.port}")
+    private String port;
 
-    public MidOperationException(String message) {
-        this.message = message;
+    public static void main(String[] args) {
+        SpringApplication.run(SmartIdJavaDemoApplication.class, args);
     }
 
-    public MidOperationException(String message, Throwable cause) {
-        super(cause);
-        this.message = message + " Cause: " +  cause.getMessage();
-    }
-
-    public MidOperationException(List<String> errors) {
-        this.message = "Smart-ID service returned validation errors: " + String.join(", ", errors);
-    }
-
-    public String getMessage() {
-        return message;
+    @EventListener({ApplicationReadyEvent.class})
+    void applicationReadyEvent() {
+        System.out.println("Now open http://localhost:" + port);
     }
 
 }

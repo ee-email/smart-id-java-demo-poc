@@ -23,7 +23,7 @@ You need to register demo smart-id (And Testflight app if you have an IOS phone)
 
 ## Building a real-life application
 
-For real-life use case you need to change in class `MobileIdSignatureServiceImpl` in method `sendSignatureRequest`
+For real-life use case you need to change in class `SmartIdSignatureServiceImpl` in method `sendSignatureRequest`
 
 the following line (constructor parameter needs to be PROD):
 
@@ -34,7 +34,7 @@ and only import the certificates you trust:
 
   * SSL certificate of SK Smart-ID API endpoint. 
   * Smart-ID root certificates (to validate that the returned certificate is issued by SK).
-    * For this you need to import TEST_of_EID-SK_2016.pem.crt and TEST_of_NQ-SK_2016.pem.crt into mid.trusted_root_certs.p12
+    * For this you need to import TEST_of_EID-SK_2016.pem.crt and TEST_of_NQ-SK_2016.pem.crt into sid.trusted_root_certs.p12
 
 ## Troubleshooting
 

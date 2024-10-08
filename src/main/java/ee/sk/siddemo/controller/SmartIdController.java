@@ -1,4 +1,4 @@
-package ee.sk.middemo.controller;
+package ee.sk.siddemo.controller;
 
 /*-
  * #%L
@@ -10,42 +10,51 @@ package ee.sk.middemo.controller;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
 
-import ee.sk.middemo.exception.FileUploadException;
-import ee.sk.middemo.exception.MidOperationException;
-import ee.sk.middemo.model.*;
-import ee.sk.middemo.services.SmartIdAuthenticationService;
-import ee.sk.middemo.services.SmartIdSignatureService;
-import ee.sk.smartid.AuthenticationIdentity;
+import javax.validation.Valid;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.validation.Valid;
+import ee.sk.siddemo.exception.FileUploadException;
+import ee.sk.siddemo.exception.SidOperationException;
+import ee.sk.siddemo.model.AuthenticationSessionInfo;
+import ee.sk.siddemo.model.SigningResult;
+import ee.sk.siddemo.model.SigningSessionInfo;
+import ee.sk.siddemo.model.UserRequest;
+import ee.sk.siddemo.model.UserSidSession;
+import ee.sk.siddemo.services.SmartIdAuthenticationService;
+import ee.sk.siddemo.services.SmartIdSignatureService;
+import ee.sk.smartid.AuthenticationIdentity;
 
 @RestController
 public class SmartIdController {
-    Logger logger = LoggerFactory.getLogger(SmartIdController.class);
+    
+    private static final Logger logger = LoggerFactory.getLogger(SmartIdController.class);
 
-    private SmartIdSignatureService signatureService;
-    private SmartIdAuthenticationService authenticationService;
-
-    private UserSidSession userSidSession;
+    private final SmartIdSignatureService signatureService;
+    private final SmartIdAuthenticationService authenticationService;
+    private final UserSidSession userSidSession;
 
     @Autowired
     public SmartIdController(SmartIdSignatureService signatureService, SmartIdAuthenticationService authenticationService, UserSidSession userSidSession) {
@@ -125,20 +134,20 @@ public class SmartIdController {
 
         model.addAttribute("errorMessage", "File upload error");
 
-        return new ModelAndView("midOperationError", model);
+        return new ModelAndView("sidOperationError", model);
     }
 
-    @ExceptionHandler(MidOperationException.class)
-    public ModelAndView handleMidOperationException(MidOperationException exception) {
+    @ExceptionHandler(SidOperationException.class)
+    public ModelAndView handleSidOperationException(SidOperationException exception) {
         ModelMap model = new ModelMap();
 
         model.addAttribute("errorMessage", exception.getMessage());
 
-        return new ModelAndView("midOperationError", model);
+        return new ModelAndView("sidOperationError", model);
     }
 
     @ExceptionHandler(Exception.class)
-    public ModelAndView handleMobileIdException(Exception exception) {
+    public ModelAndView handleSmartIdException(Exception exception) {
         logger.warn("Generic error caught", exception);
 
         ModelMap model = new ModelMap();

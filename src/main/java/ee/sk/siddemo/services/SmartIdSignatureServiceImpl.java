@@ -1,4 +1,4 @@
-package ee.sk.middemo.services;
+package ee.sk.siddemo.services;
 
 /*-
  * #%L
@@ -10,33 +10,33 @@ package ee.sk.middemo.services;
  * it under the terms of the GNU Lesser General Public License as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Lesser Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Lesser Public
  * License along with this program.  If not, see
  * <http://www.gnu.org/licenses/lgpl-3.0.html>.
  * #L%
  */
 
-import ee.sk.middemo.exception.FileUploadException;
-import ee.sk.middemo.exception.MidOperationException;
-import ee.sk.middemo.model.SigningResult;
-import ee.sk.middemo.model.SigningSessionInfo;
-import ee.sk.middemo.model.UserRequest;
-import ee.sk.smartid.*;
-import ee.sk.smartid.exception.permanent.ServerMaintenanceException;
-import ee.sk.smartid.exception.useraccount.DocumentUnusableException;
-import ee.sk.smartid.exception.useraccount.UserAccountNotFoundException;
-import ee.sk.smartid.exception.useraction.SessionTimeoutException;
-import ee.sk.smartid.exception.useraction.UserRefusedException;
-import ee.sk.smartid.exception.useraction.UserSelectedWrongVerificationCodeException;
-import ee.sk.smartid.rest.SmartIdConnector;
-import ee.sk.smartid.rest.dao.*;
-import org.digidoc4j.*;
+import static java.util.Arrays.asList;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.concurrent.TimeUnit;
+
+import org.digidoc4j.Configuration;
+import org.digidoc4j.Container;
+import org.digidoc4j.ContainerBuilder;
+import org.digidoc4j.DataFile;
+import org.digidoc4j.DataToSign;
+import org.digidoc4j.DigestAlgorithm;
+import org.digidoc4j.Signature;
+import org.digidoc4j.SignatureBuilder;
+import org.digidoc4j.SignatureProfile;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,34 +44,48 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.concurrent.TimeUnit;
-
-import static java.util.Arrays.asList;
+import ee.sk.siddemo.exception.FileUploadException;
+import ee.sk.siddemo.exception.SidOperationException;
+import ee.sk.siddemo.model.SigningResult;
+import ee.sk.siddemo.model.SigningSessionInfo;
+import ee.sk.siddemo.model.UserRequest;
+import ee.sk.smartid.HashType;
+import ee.sk.smartid.SignableData;
+import ee.sk.smartid.SignableHash;
+import ee.sk.smartid.SmartIdCertificate;
+import ee.sk.smartid.SmartIdClient;
+import ee.sk.smartid.SmartIdSignature;
+import ee.sk.smartid.exception.permanent.ServerMaintenanceException;
+import ee.sk.smartid.exception.useraccount.DocumentUnusableException;
+import ee.sk.smartid.exception.useraccount.UserAccountNotFoundException;
+import ee.sk.smartid.exception.useraction.SessionTimeoutException;
+import ee.sk.smartid.exception.useraction.UserRefusedException;
+import ee.sk.smartid.exception.useraction.UserSelectedWrongVerificationCodeException;
+import ee.sk.smartid.rest.SmartIdConnector;
+import ee.sk.smartid.rest.dao.Interaction;
+import ee.sk.smartid.rest.dao.SemanticsIdentifier;
+import ee.sk.smartid.rest.dao.SessionStatus;
 
 @Service
 public class SmartIdSignatureServiceImpl implements SmartIdSignatureService {
 
-    Logger logger = LoggerFactory.getLogger(SmartIdSignatureServiceImpl.class);
+    private static final Logger logger = LoggerFactory.getLogger(SmartIdSignatureServiceImpl.class);
 
+    @Value("${sid.sign.displayText}")
+    private String sidSignDisplayText;
 
-    @Value("${mid.sign.displayText}")
-    private String midSignDisplayText;
+    @Value("${sid.client.relyingPartyUuid}")
+    private String sidRelyingPartyUuid;
 
-    @Value("${mid.client.relyingPartyUuid}")
-    private String midRelyingPartyUuid;
+    @Value("${sid.client.relyingPartyName}")
+    private String sidRelyingPartyName;
 
-    @Value("${mid.client.relyingPartyName}")
-    private String midRelyingPartyName;
+    private final SmartIdCertificateService certificateService;
+    private final SmartIdClient client;
 
-    private SmartIdCertificateService certificateService;
-
-    @Autowired
-    private SmartIdClient client;
-
-    public SmartIdSignatureServiceImpl(SmartIdCertificateService certificateService) {
+    public SmartIdSignatureServiceImpl(SmartIdCertificateService certificateService, SmartIdClient client) {
         this.certificateService = certificateService;
+        this.client = client;
     }
 
     @Override
@@ -89,17 +103,17 @@ public class SmartIdSignatureServiceImpl implements SmartIdSignatureService {
         Configuration configuration = new Configuration(Configuration.Mode.TEST);
 
         Container container = ContainerBuilder.aContainer()
-            .withConfiguration(configuration)
-            .withDataFile(uploadedFile)
-            .build();
+                .withConfiguration(configuration)
+                .withDataFile(uploadedFile)
+                .build();
 
         SmartIdCertificate signingCert = certificateService.getCertificate(userRequest);
 
         DataToSign dataToSignExternally = SignatureBuilder.aSignature(container)
-            .withSigningCertificate(signingCert.getCertificate())
-            .withSignatureDigestAlgorithm(DigestAlgorithm.SHA256)
-            .withSignatureProfile(SignatureProfile.LT)
-            .buildDataToSign();
+                .withSigningCertificate(signingCert.getCertificate())
+                .withSignatureDigestAlgorithm(DigestAlgorithm.SHA256)
+                .withSignatureProfile(SignatureProfile.LT)
+                .buildDataToSign();
 
 
         SignableData signableData = new SignableData(dataToSignExternally.getDataToSign());
@@ -111,12 +125,12 @@ public class SmartIdSignatureServiceImpl implements SmartIdSignatureService {
 
 
         return SigningSessionInfo.newBuilder()
-            .withVerificationCode(hashToSign.calculateVerificationCode())
-            .withDataToSign(dataToSignExternally)
-            .withContainer(container)
-            .withDocumentNumber(signingCert.getDocumentNumber())
-            .withHashToSign(hashToSign)
-            .build();
+                .withVerificationCode(hashToSign.calculateVerificationCode())
+                .withDataToSign(dataToSignExternally)
+                .withContainer(container)
+                .withDocumentNumber(signingCert.getDocumentNumber())
+                .withHashToSign(hashToSign)
+                .build();
     }
 
     private DataFile getUploadedDataFile(MultipartFile uploadedFile) {
@@ -151,29 +165,28 @@ public class SmartIdSignatureServiceImpl implements SmartIdSignatureService {
             signature = signingSessionInfo.getDataToSign().finalize(signatureValue);
             signingSessionInfo.getContainer().addSignature(signature);
 
-            File containerFile = File.createTempFile("mid-demo-container-", ".asice"); // TODO replace mid with sid
+            File containerFile = File.createTempFile("sid-demo-container-", ".asice");
             filePath = containerFile.getAbsolutePath();
             signingSessionInfo.getContainer().saveAsFile(filePath);
-        }
-        catch (UserAccountNotFoundException | UserRefusedException | UserSelectedWrongVerificationCodeException | SessionTimeoutException | DocumentUnusableException | ServerMaintenanceException e) {
+        } catch (UserAccountNotFoundException | UserRefusedException | UserSelectedWrongVerificationCodeException | SessionTimeoutException |
+                 DocumentUnusableException | ServerMaintenanceException e) {
             logger.warn("Smart-ID service returned internal error that cannot be handled locally.");
-            throw new MidOperationException("Smart-ID internal error", e);
-        }
-        catch (IOException e) {
-            throw new MidOperationException("Could not create container file.", e);
+            throw new SidOperationException("Smart-ID internal error", e);
+        } catch (IOException e) {
+            throw new SidOperationException("Could not create container file.", e);
         }
 
         return SigningResult.newBuilder()
-            .withResult("Signing successful")
-            .withValid(signature.validateSignature().isValid())
-            .withTimestamp(signature.getTimeStampCreationTime())
-            .withContainerFilePath(filePath)
-            .build();
+                .withResult("Signing successful")
+                .withValid(signature.validateSignature().isValid())
+                .withTimestamp(signature.getTimeStampCreationTime())
+                .withContainerFilePath(filePath)
+                .build();
     }
 
     private SessionStatus pollSessionStatus(String sessionId, SmartIdConnector connector1) throws InterruptedException {
         SessionStatus sessionStatus = null;
-        while (sessionStatus == null || "RUNNING".equalsIgnoreCase(sessionStatus.getState() )) {
+        while (sessionStatus == null || "RUNNING".equalsIgnoreCase(sessionStatus.getState())) {
             sessionStatus = connector1.getSessionStatus(sessionId);
             TimeUnit.SECONDS.sleep(1);
         }
